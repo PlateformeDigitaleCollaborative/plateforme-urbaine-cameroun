@@ -27,7 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity(repositoryClass: SpaceHighlightRepository::class)]
 #[ORM\Table(name: 'space_highlight', schema: 'divercity')]
-#[ORM\UniqueConstraint(name: 'uniq_space_highlight_space_year', columns: ['space_id', 'year'])]
+#[ORM\UniqueConstraint(name: 'uniq_space_highlight_space_year_semester', columns: ['space_id', 'year', 'semester'])]
 #[ApiResource(
     normalizationContext: ['groups' => [self::GROUP_READ]],
     denormalizationContext: ['groups' => [self::GROUP_WRITE]],
@@ -58,13 +58,21 @@ class SpaceHighlight
     #[ORM\ManyToOne(targetEntity: Space::class, inversedBy: 'highlights')]
     #[ORM\JoinColumn(name: 'space_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[Assert\NotNull]
-    #[Groups([self::GROUP_WRITE])] // pas besoin de le renvoyer en lecture, déjà implicite via Space
+    #[Groups([self::GROUP_WRITE])]
     private ?Space $space = null;
 
     #[ORM\Column]
     #[Assert\Range(min: 2000, max: 2100)]
     #[Groups([self::GROUP_READ, self::GROUP_WRITE, Space::GROUP_READ])]
     private ?int $year = null;
+
+    /**
+     * 1 = premier semestre (janvier-juin), 2 = second semestre (juillet-décembre).
+     */
+    #[ORM\Column]
+    #[Assert\Choice(choices: [1, 2])]
+    #[Groups([self::GROUP_READ, self::GROUP_WRITE, Space::GROUP_READ])]
+    private ?int $semester = null;
 
     #[ORM\ManyToOne(targetEntity: FileObject::class)]
     #[ORM\JoinColumn(name: 'report_file_object_id', referencedColumnName: 'id')]
@@ -113,6 +121,18 @@ class SpaceHighlight
     public function setYear(int $year): static
     {
         $this->year = $year;
+
+        return $this;
+    }
+
+    public function getSemester(): ?int
+    {
+        return $this->semester;
+    }
+
+    public function setSemester(int $semester): static
+    {
+        $this->semester = $semester;
 
         return $this;
     }

@@ -102,6 +102,10 @@ function slotTitle(slot: SpaceAvailability): string {
 }
 
 function slotTypeLabel(slot: SpaceAvailability): string {
+  if (slot.type === 'booking' && slot.eventActivityTypeShortLabel ) {
+    return slot.eventActivityTypeShortLabel 
+  }
+
   if (slot.type === 'booking' && slot.eventActivityTypeLabel) {
     return slot.eventActivityTypeLabel
   }
@@ -239,7 +243,7 @@ const hourMarks = computed(() => {
     padding: 0.2rem 0.55rem;
     font-size: $font-size-xs;
     font-weight: 600;
-    border-radius: 0.25rem;
+    border-radius: 999px;
     border: 1px solid;
     transition: all 0.2s ease;
   }

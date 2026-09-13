@@ -42,6 +42,10 @@ export class SpacesService {
     return (await apiClient.patch(`/api/space_highlights/${id}`, values)).data
   }
 
+  static async deleteHighlight(id: number): Promise<void> {
+    await apiClient.delete(`/api/space_highlights/${id}`)
+  }
+
   static async getEventActivityTypes(): Promise<EventActivityType[]> {
     const data = (
       await apiClient.get('/api/event_activity_types', { headers: { accept: 'application/ld+json' } })

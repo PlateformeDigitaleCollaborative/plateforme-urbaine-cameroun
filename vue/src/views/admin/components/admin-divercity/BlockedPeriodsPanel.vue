@@ -212,7 +212,7 @@ const calendarAttributes = computed(() =>
     dates: new Date(period.date),
     highlight: {
       style: {
-        backgroundColor: '#F97316',
+        backgroundColor: 'rgba(249, 115, 22, 0.7)', // au lieu de '#F97316' en plein
         borderRadius: '50%'
       },
       contentStyle: {

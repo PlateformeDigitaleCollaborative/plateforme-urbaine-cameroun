@@ -58,13 +58,13 @@
               target="_blank"
               class="ReportCard"
             >
-              <div class="ReportCard__icon">
+              <!-- <div class="ReportCard__icon">
                 <v-icon icon="$filePdfBox" size="24" color="main-blue" />
-              </div>
+              </div> -->
               <div class="ReportCard__info">
-                <span class="ReportCard__year">{{ highlight.year }}</span>
+                <span class="ReportCard__year">{{ highlight.year }} · S{{ highlight.semester }}</span>
                 <span class="ReportCard__label">
-                  {{ $t('divercity.space.reportLabel', { year: highlight.year }) }}
+                  {{ $t('divercity.space.reportLabel', { year: highlight.year, semester: highlight.semester }) }}
                 </span>
               </div>
               <v-icon icon="$downloadOutline" size="18" color="main-blue" class="ReportCard__download" />
@@ -111,7 +111,9 @@ onMounted(() => {
 
 const currentHighlight = computed(() => {
   if (!space.value?.highlights?.length) return null
-  return [...space.value.highlights].sort((a, b) => b.year - a.year)[0]
+  return [...space.value.highlights].sort(
+    (a, b) => b.year - a.year || b.semester - a.semester
+  )[0]
 })
 
 const recentReports = computed(() => {
@@ -119,7 +121,7 @@ const recentReports = computed(() => {
   const currentYear = new Date().getFullYear()
   return [...space.value.highlights]
     .filter((highlight) => highlight.report && highlight.year >= currentYear - 9)
-    .sort((a, b) => b.year - a.year)
+    .sort((a, b) => b.year - a.year || b.semester - a.semester)
 })
 
 const formattedDescription = computed(() => formatHTMLForSheetView(space.value?.description as string))

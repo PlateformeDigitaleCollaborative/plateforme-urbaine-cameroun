@@ -40,6 +40,13 @@ class EventActivityType
     #[Groups([self::GROUP_READ, Booking::GROUP_READ, Booking::GROUP_PUBLIC])]
     private ?string $label = null;
 
+    // Libellé court utilisé partout où l'espace est réduit (select, badges,
+    // cartes de réservation) — le "label" complet reste réservé aux vues
+    // détaillées.
+    #[ORM\Column(length: 50, nullable: true)]
+    #[Groups([self::GROUP_READ, Booking::GROUP_READ, Booking::GROUP_PUBLIC])]
+    private ?string $shortLabel = null;
+
     #[ORM\Column(length: 7, options: ['default' => '#3B82F6'])]
     #[Groups([self::GROUP_READ, Booking::GROUP_READ, Booking::GROUP_PUBLIC])]
     private ?string $color = '#3B82F6';
@@ -57,6 +64,18 @@ class EventActivityType
     public function setLabel(string $label): static
     {
         $this->label = $label;
+
+        return $this;
+    }
+
+    public function getShortLabel(): ?string
+    {
+        return $this->shortLabel;
+    }
+
+    public function setShortLabel(?string $shortLabel): static
+    {
+        $this->shortLabel = $shortLabel;
 
         return $this;
     }

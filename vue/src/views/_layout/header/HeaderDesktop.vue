@@ -33,13 +33,13 @@
           </v-tabs>
           <v-btn
             base-color="main-red"
-            class="text-white mr-3 gap-5"
+            class="text-white"
             :to="{ name: 'divercitySpace' }"
             flat
           >
             {{ $t('header.divercitySpace') }}
           </v-btn>
-          <v-btn base-color="white" class="text-main-blue mr-3 gap-5" :to="{ name: 'map' }" flat>
+          <v-btn base-color="white" class="text-main-blue" :to="{ name: 'map' }" flat>
             <img
               loading="lazy"
               src="@/assets/images/icons/add_location_alt.svg"
@@ -87,7 +87,7 @@ const navigationTabs = computed(() =>
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        padding: 0 1rem;
+        padding: 0; // retiré : provoquait le décalage avec Header__navContent, qui n'a pas ce padding
         color: rgb(var(--v-theme-main-blue));
         height: var(--dim-banner-h);
 
@@ -156,6 +156,7 @@ const navigationTabs = computed(() =>
             justify-content: flex-end;
             align-items: center;
             padding: 20px 0 10px 0;
+            gap: 0.75rem; // remplace les mr-3 individuels retirés des v-btn
           }
         }
       }

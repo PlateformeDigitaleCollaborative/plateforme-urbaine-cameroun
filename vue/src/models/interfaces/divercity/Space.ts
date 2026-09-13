@@ -13,6 +13,7 @@ export interface SpaceStatistic {
 export interface SpaceHighlight extends SymfonyRelation {
   id: number
   year: number
+  semester: 1 | 2
   report?: FileObject
   statistics: SpaceStatistic[]
   createdAt: string

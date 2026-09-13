@@ -22,9 +22,9 @@
         <v-icon icon="$menuDown" class="ml-1"></v-icon>
         <v-menu activator="parent">
           <v-list>
-            <v-list-item
+           <v-list-item
               v-for="(item, index) in sortingListItems"
-              @click="sortingKey = item.sortingKey"
+              @click="handleSortingItemClick(item.sortingKey)"
               :key="index"
             >
               {{ item.text }}
@@ -64,12 +64,19 @@ const props = defineProps<{
 }>()
 const emit = defineEmits(['updateSortingKey', 'updateSearchQuery'])
 const sortingKey = ref('isValidated')
-watch(
-  () => sortingKey.value,
-  () => {
-    emit('updateSortingKey', sortingKey.value)
-  }
-)
+
+function handleSortingItemClick(key: string) {
+  sortingKey.value = key
+  emit('updateSortingKey', key)
+}
+// watch(
+//   () => sortingKey.value,
+//   () => {
+//     emit('updateSortingKey', sortingKey.value)
+//   }
+// )
+
+
 const title = computed(() => {
   switch (props.page) {
     case 'Projects':

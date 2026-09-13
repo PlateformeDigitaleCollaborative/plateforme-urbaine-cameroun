@@ -61,6 +61,9 @@ class SpaceAvailability
     private ?string $eventActivityTypeLabel = null;
 
     #[Groups([self::GROUP_READ])]
+    private ?string $eventActivityTypeShortLabel = null;
+
+    #[Groups([self::GROUP_READ])]
     private ?string $eventActivityTypeColor = null;
 
     public function getId(): string
@@ -164,6 +167,18 @@ class SpaceAvailability
     public function setEventActivityTypeLabel(?string $eventActivityTypeLabel): self
     {
         $this->eventActivityTypeLabel = $eventActivityTypeLabel;
+
+        return $this;
+    }
+
+    public function getEventActivityTypeShortLabel(): ?string
+    {
+        return $this->eventActivityTypeShortLabel;
+    }
+
+    public function setEventActivityTypeShortLabel(?string $eventActivityTypeShortLabel): self
+    {
+        $this->eventActivityTypeShortLabel = $eventActivityTypeShortLabel;
 
         return $this;
     }

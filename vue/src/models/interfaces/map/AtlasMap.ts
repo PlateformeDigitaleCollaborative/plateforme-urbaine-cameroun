@@ -1,4 +1,5 @@
-import type { AtlasLayer } from './Layer'
+import type { AtlasLayer } from "./Layer"
+
 
 export interface AtlasMap {
   id: string

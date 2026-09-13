@@ -151,7 +151,8 @@ function openOfficeOnMap() {
     name: 'map',
     query: {
       focusLat: String(OFFICE_COORDINATES.lat),
-      focusLng: String(OFFICE_COORDINATES.lng)
+      focusLng: String(OFFICE_COORDINATES.lng),
+      focusLabel: 'Expertise France'
     }
   })
 }

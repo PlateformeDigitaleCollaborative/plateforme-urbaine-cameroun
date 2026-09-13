@@ -14,7 +14,7 @@
         class="MyBookingCard__eventType"
         :style="eventTypeStyle"
       >
-        {{ eventType.label }}
+        {{ eventType.shortLabel || eventType.label }}
       </span>
 
       <p class="MyBookingCard__slot">
@@ -40,6 +40,8 @@ import type { Booking } from '@/models/interfaces/divercity/Booking'
 import { localizeDate } from '@/services/utils/UtilsService'
 import { mdiEye } from '@mdi/js'
 import { computed } from 'vue'
+import { getBookingStatusColor } from '@/services/divercity/BookingStatusService'
+
 
 const props = defineProps<{ booking: Booking }>()
 defineEmits(['view'])
@@ -47,17 +49,7 @@ defineEmits(['view'])
 const statusCode = computed(() => (props.booking.status as any)?.code)
 const statusLabel = computed(() => (props.booking.status as any)?.label ?? statusCode.value)
 
-const statusColor = computed(() => {
-  switch (statusCode.value) {
-    case 'ACCEPTEE':
-      return 'main-green'
-    case 'REFUSEE':
-    case 'ANNULEE':
-      return 'main-red'
-    default:
-      return 'main-yellow'
-  }
-})
+const statusColor = computed(() => getBookingStatusColor(statusCode.value))
 
 const spaceName = computed(() => {
   const space = props.booking.space

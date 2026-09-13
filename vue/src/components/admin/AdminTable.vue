@@ -47,7 +47,12 @@
           :src="getNestedObjectValue(item, logoField)"
           class="AdminTable__item__logo"
         />
-        <template v-if="isDateColumn(tableKey, item)">
+        <template v-if="isChipColumn(tableKey)">
+          <v-chip :color="chipColorFn?.(item, tableKey)" size="small">
+            {{ getNestedObjectValue(item, tableKey) }}
+          </v-chip>
+        </template>
+        <template v-else-if="isDateColumn(tableKey, item)">
           <v-tooltip :text="new Date(getNestedObjectValue(item, tableKey)).toLocaleDateString()">
             <template v-slot:activator="{ props }">
               <span v-bind="props">{{
@@ -103,17 +108,23 @@ const props = withDefaults(
     logoField?: string
     isOverlayShownFunction?: (item: Item) => boolean
     rowClickable?: boolean
-    // Quand true : le premier clic sur une ligne la sélectionne seulement (icône + surbrillance),
-    // c'est le second clic sur la ligne déjà sélectionnée qui émet 'row-click' pour ouvrir le détail.
-    // Évite d'ouvrir le popup par erreur et de perdre la ligne qu'on visait.
     selectable?: boolean
+    // Clés de tableKeys à afficher en v-chip coloré plutôt qu'en texte simple
+    chipKeys?: string[]
+    // Calcule la couleur du chip pour une cellule donnée (item + tableKey concerné)
+    chipColorFn?: (item: Item, tableKey: string) => string | undefined
   }>(),
   {
     rowClickable: false,
     dateKeys: () => [],
-    selectable: false
+    selectable: false,
+    chipKeys: () => []
   }
 )
+
+function isChipColumn(tableKey: string): boolean {
+  return props.chipKeys.includes(tableKey)
+}
 
 const defaultColumnWidths = ['15%', '40%', '25%', '20%']
 const columnWidths = props.columnWidths || defaultColumnWidths

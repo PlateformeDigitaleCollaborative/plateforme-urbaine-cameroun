@@ -46,6 +46,14 @@
         v-model.number="row.year"
         class="SpaceManagementPanel__reportYear"
       />
+      <v-select
+        density="compact"
+        variant="outlined"
+        :label="$t('divercity.form.semester')"
+        :items="[{ title: $t('divercity.form.semester1'), value: 1 }, { title: $t('divercity.form.semester2'), value: 2 }]"
+        v-model="row.semester"
+        class="SpaceManagementPanel__reportSemester"
+      />
       <v-file-input
         density="compact"
         variant="outlined"
@@ -53,6 +61,14 @@
         :label="$t('divercity.form.report')"
         v-model="row.reportFile"
         :placeholder="row.existingReport ? $t('divercity.form.existingReportPlaceholder') : undefined"
+      />
+      <v-btn
+        icon="$delete"
+        variant="text"
+        color="main-red"
+        density="comfortable"
+        class="SpaceManagementPanel__reportDelete"
+        @click="removeReportRow(index)"
       />
     </div>
 
@@ -105,6 +121,7 @@ function handlePhotosUpdate(list: any) {
 interface ReportRow {
   id?: number
   year: number
+  semester: 1 | 2
   existingReport: SpaceHighlight['report'] | null
   reportFile: File | null
   statistics: SpaceHighlight['statistics']
@@ -122,10 +139,11 @@ watch(
     existingPhotos.value = newSpace.photos
 
     reportRows.value = [...(newSpace.highlights ?? [])]
-      .sort((a, b) => b.year - a.year)
+      .sort((a, b) => b.year - a.year || b.semester - a.semester)
       .map((highlight) => ({
         id: highlight.id,
         year: highlight.year,
+        semester: highlight.semester,
         existingReport: highlight.report ?? null,
         reportFile: null,
         statistics: highlight.statistics ?? []
@@ -135,9 +153,13 @@ watch(
 )
 
 function addReportRow() {
-  const lastYear = reportRows.value[0]?.year ?? new Date().getFullYear()
+  const last = reportRows.value[0]
+  const nextYear = last ? (last.semester === 2 ? last.year + 1 : last.year) : new Date().getFullYear()
+  const nextSemester: 1 | 2 = last ? (last.semester === 2 ? 1 : 2) : 1
+
   reportRows.value.unshift({
-    year: lastYear + 1,
+    year: nextYear,
+    semester: nextSemester,
     existingReport: null,
     reportFile: null,
     statistics: []
@@ -145,6 +167,8 @@ function addReportRow() {
 }
 
 const isSubmitting = ref(false)
+const isDeleting = ref(false)
+
 
 async function submitAll() {
   if (!space.value) return
@@ -168,9 +192,11 @@ async function submitAll() {
         reportIri = uploaded['@id']
       }
 
+
       const payload: SpaceHighlightSubmission = {
         year: row.year,
-        statistics: row.statistics, // conservées telles quelles, non éditées dans cette interface
+        semester: row.semester, // conservées telles quelles, non éditées dans cette interface
+        statistics: row.statistics,
         ...(reportIri ? { report: reportIri } : {})
       }
 
@@ -187,6 +213,28 @@ async function submitAll() {
     addNotification(i18n.t('divercity.form.submitError'), NotificationType.ERROR, error as string)
   }
   isSubmitting.value = false
+}
+
+async function removeReportRow(index: number) {
+  const row = reportRows.value[index]
+
+  if (row.id) {
+    const confirmed = window.confirm(i18n.t('divercity.form.deleteReportConfirm'))
+    if (!confirmed) return
+
+    isDeleting.value = true
+    try {
+      await SpacesService.deleteHighlight(row.id)
+      reportRows.value.splice(index, 1)
+      addNotification(i18n.t('divercity.form.deleteReportSuccess'), NotificationType.SUCCESS)
+    } catch (error) {
+      addNotification(i18n.t('divercity.form.deleteReportError'), NotificationType.ERROR, error as string)
+    }
+    isDeleting.value = false
+  } else {
+    // Ligne pas encore enregistrée : simple retrait local, pas d'appel API
+    reportRows.value.splice(index, 1)
+  }
 }
 </script>
 
@@ -221,6 +269,16 @@ async function submitAll() {
   &__reportYear {
     max-width: 120px;
     flex: 0 0 auto;
+  }
+
+  &__reportSemester {
+    max-width: 140px;
+    flex: 0 0 auto;
+  }
+
+  &__reportDelete {
+    flex: 0 0 auto;
+    margin-top: 0.25rem; // aligne visuellement avec les champs en variant="outlined"
   }
 }
 </style>

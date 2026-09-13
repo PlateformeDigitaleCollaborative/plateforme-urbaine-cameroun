@@ -205,12 +205,12 @@ const calendarAttributes = computed(() => {
 
   return allMonthDays.map((dateKey) => {
     const status = dayStatus(dateKey)
-    let color = 'rgb(var(--v-theme-main-green))'
+    let color = 'rgba(var(--v-theme-main-green), 0.7)'
 
     if (status === 'full') {
-      color = 'rgb(var(--v-theme-main-red))'
+      color = 'rgba(var(--v-theme-main-red), 0.7)'
     } else if (status === 'partial') {
-      color = '#F97316'
+      color = 'rgba(249, 115, 22, 0.7)'
     }
 
     return {
@@ -320,6 +320,7 @@ function bookThisSlot() {
       width: 0.6rem;
       height: 0.6rem;
       border-radius: 50%;
+      opacity: 0.7; // adoucit les 3 couleurs sans dupliquer les règles
     }
 
     &--free::before {

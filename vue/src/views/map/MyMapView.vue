@@ -59,10 +59,27 @@ function focusOnQueryLocation() {
   const lng = parseFloat(route.query.focusLng as string)
   if (Number.isNaN(lat) || Number.isNaN(lng)) return
 
+  const label = route.query.focusLabel as string | undefined
+
   MapService.isLoaded(map.value, () => {
     if (!map.value) return
+
+    const marker = new maplibregl.Marker({ color: '#E83323' })
+      .setLngLat([lng, lat])
+      .addTo(map.value)
+
+    if (label) {
+      const popup = new maplibregl.Popup({ offset: 25, closeButton: false })
+        .setLngLat([lng, lat])
+        .setText(label)
+      marker.setPopup(popup)
+    }
+
     map.value.flyTo({ center: [lng, lat], zoom: 17 })
-    new maplibregl.Marker({ color: '#E83323' }).setLngLat([lng, lat]).addTo(map.value)
+
+    map.value.once('moveend', () => {
+      marker.togglePopup()
+    })
   })
 }
 </script>
