@@ -2,9 +2,7 @@
   <div class="Header Header--desktop">
     <div class="Header__banner">
       <div class="Header__bannerContent container container--transition">
-        <div class="Header__bannerContent container container--transition">
-          <LoginButton variant="link" />
-        </div>
+        <LoginButton variant="link" />
       </div>
     </div>
     <div class="Header__nav">

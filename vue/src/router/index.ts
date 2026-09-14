@@ -17,6 +17,7 @@ import AdminMaps from '@/views/admin/components/AdminMaps.vue'
 import AdminMembers from '@/views/admin/components/AdminMembers.vue'
 import HomeView from '@/views/home/HomeView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import { PageViewService } from '@/services/kpi/PageViewService'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -286,6 +287,11 @@ const router = createRouter({
           component: () => import('@/views/admin/components/admin-divercity/BlockedPeriodsPanel.vue')
         },
         {
+          name: 'adminStats',
+          path: i18n.t('routes.adminStats'),
+          component: () => import('@/views/admin/components/admin-stats/AdminStatsPanel.vue')
+        },
+        {
           path: 'content',
           name: 'adminContent',
           component: AdminContent,
@@ -402,6 +408,11 @@ if (import.meta.env.VITE_GOAT_COUNTER_NAMESPACE != null) {
     }
   })
 }
+
+// Tracking interne pour les KPIs d'audience de la PDC (indépendant de GoatCounter)
+router.afterEach((to) => {
+  PageViewService.logView(to.fullPath)
+})
 
 // Workaround for https://github.com/vitejs/vite/issues/11804
 router.onError((err, to) => {

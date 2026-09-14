@@ -22,6 +22,30 @@
     "panelDiverCityBlockedPeriods": "Périodes bloquées",
     "panelDiverCityHighlights": "À la une",
     "panelDiverCityKpis": "KPIs",
+    "panelStats": "Suivi d'audience",
+    "stats": {
+      "range7": "7 jours",
+      "range30": "30 jours",
+      "range90": "90 jours",
+      "loading": "Chargement des statistiques...",
+      "empty": "Aucune donnée disponible pour le moment.",
+      "audience": {
+        "title": "Audience",
+        "totalViews": "Pages vues",
+        "uniqueVisitors": "Visiteurs uniques",
+        "topPages": "Pages les plus consultées"
+      },
+      "connections": {
+        "title": "Connexions",
+        "totalConnections": "Connexions",
+        "activeUsers": "Utilisateurs actifs"
+      },
+      "contentViews": {
+        "title": "Fiches les plus consultées",
+        "topActors": "Acteurs",
+        "topProjects": "Projets"
+      }
+    },
     "form": {
       "newSubmission": "Nouvelle soumission de {fullName} reçue le {date} à {time}."
     },

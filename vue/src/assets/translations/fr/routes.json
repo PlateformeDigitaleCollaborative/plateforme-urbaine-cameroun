@@ -13,6 +13,7 @@
         "adminDivercityBlockedPeriods": "periodes-bloquees",
         "divercitySpaceAvailability": "disponibilites-divercity-space",
         "adminDivercityHighlights": "points-forts-divercity",
-        "adminDivercityKpis": "kpis"
+        "adminDivercityKpis": "kpis",
+        "adminStats": "statistiques"
     }
 }

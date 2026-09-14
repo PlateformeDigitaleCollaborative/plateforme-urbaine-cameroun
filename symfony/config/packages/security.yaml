@@ -69,6 +69,7 @@ security:
         - { path: ^/api/spaces, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/media, role: PUBLIC_ACCESS }
         - { path: ^/api/export-map, roles: PUBLIC_ACCESS }
+        - { path: ^/api/page_views, roles: PUBLIC_ACCESS, methods: [POST] }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
         
 

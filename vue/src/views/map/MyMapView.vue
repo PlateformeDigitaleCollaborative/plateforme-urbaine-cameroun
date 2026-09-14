@@ -68,8 +68,13 @@ function focusOnQueryLocation() {
       .setLngLat([lng, lat])
       .addTo(map.value)
 
+    let popup: maplibregl.Popup | undefined
     if (label) {
-      const popup = new maplibregl.Popup({ offset: 25, closeButton: false })
+      popup = new maplibregl.Popup({
+        offset: 25,
+        closeButton: false,
+        className: 'MyMapView__officeLabelPopup' // classe dédiée pour ne pas impacter les autres popups
+      })
         .setLngLat([lng, lat])
         .setText(label)
       marker.setPopup(popup)
@@ -79,6 +84,10 @@ function focusOnQueryLocation() {
 
     map.value.once('moveend', () => {
       marker.togglePopup()
+      // Le conteneur DOM du popup n'existe qu'une fois ouvert (togglePopup
+      // l'attache à la carte) : addClassName ne peut s'appliquer qu'ici,
+      // pas avant, sinon il ne trouve aucun élément à cibler.
+      popup?.addClassName('show')
     })
   })
 }
@@ -109,6 +118,20 @@ function focusOnQueryLocation() {
         padding-left: 0;
         padding-right: 0;
       }
+    }
+  }
+
+  .maplibregl-popup.MyMapView__officeLabelPopup {
+    .maplibregl-popup-content {
+      transform: translateY(-0.5rem); // remplace le -2rem global de Map.vue
+      background: transparent;
+      box-shadow: none;
+      padding: 0;
+      color: rgb(var(--v-theme-main-blue));
+      font-weight: 600;
+      text-shadow:
+        0 0 4px rgba(255, 255, 255, 0.9),
+        0 0 8px rgba(255, 255, 255, 0.7);
     }
   }
 }

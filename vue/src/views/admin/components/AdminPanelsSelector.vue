@@ -98,6 +98,24 @@
 
       <v-expansion-panel
         v-if="userStore.userIsAdmin()"
+        :value="AdministrationPanels.STATS"
+        :class="{
+          Admin__selectedPanel: adminStore.selectedAdminPanel === AdministrationPanels.STATS
+        }"
+        class="text-main-blue"
+      >
+        <router-link :to="{ name: 'adminStats' }">
+          <v-expansion-panel-title>
+            {{ $t('admin.panelStats') }}
+            <template v-slot:actions>
+              <v-icon color="main-blue" icon="$chevronRight"></v-icon>
+            </template>
+          </v-expansion-panel-title>
+        </router-link>
+      </v-expansion-panel>
+
+      <v-expansion-panel
+        v-if="userStore.userIsAdmin()"
         :title="$t('admin.panelComments')"
         :value="AdministrationPanels.COMMENTS"
         :class="{
@@ -213,6 +231,8 @@ watch(
     } else if (adminStore.selectedAdminPanel === AdministrationPanels.DIVERCITY) {
       router.push({ name: 'adminDiverCityBookings' })
       adminStore.selectedAdminItem = AdministrationPanels.DIVERCITY_SPACE
+    } else if (adminStore.selectedAdminPanel === AdministrationPanels.STATS) {
+      router.push({ name: 'adminStats' })
     } else {
       router.push({ name: 'actorsComments' })
       adminStore.selectedAdminItem = AdministrationPanels.COMMENTS_ACTORS

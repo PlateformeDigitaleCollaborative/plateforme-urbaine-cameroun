@@ -3,6 +3,7 @@
 namespace App\Security\Authenticator;
 
 use App\Entity\User\User;
+use App\Repository\ConnectionLogRepository;
 use App\Security\Authenticator\Exception\InvalidUserException;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler as LexikAuthenticationSuccessHandler;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +15,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 {
     public function __construct(
         private readonly LexikAuthenticationSuccessHandler $authenticationSuccessHandlerDecorated,
+        private readonly ConnectionLogRepository $connectionLogRepository,
     ) {
     }
 
@@ -24,6 +26,9 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         if (!$user->getIsValidated()) {
             throw new InvalidUserException('User is not validated');
         }
+
+        // Journalisation de la connexion pour les KPIs (connexions / utilisateurs actifs)
+        $this->connectionLogRepository->logConnection($user, $request->getClientIp());
 
         return $this->authenticationSuccessHandlerDecorated->onAuthenticationSuccess($request, $token);
     }

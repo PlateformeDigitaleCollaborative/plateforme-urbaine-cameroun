@@ -5,3 +5,7 @@ services:
 
     App\Services\State\:
         resource: '../../../src/Services/State/'
+
+    App\Services\State\Processor\PageView\PageViewLogProcessor:
+        arguments:
+            $appSecret: '%env(APP_SECRET)%'

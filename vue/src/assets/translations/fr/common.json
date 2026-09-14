@@ -30,9 +30,7 @@
     "periodes-bloquees":"Périodes bloquées",
     "points-forts-divercity":"Points forts DiverCity",
     "kpis": "Indicateurs",
-    "disponibilites-divercity-space": "Disponibilités de l'espace",
-    "formulaire-de-reservation": "Formulaire de réservation"
-    
+    "statistiques": "Suivi d'audience"
   },
   "dialog": {
     "close": "Fermer",

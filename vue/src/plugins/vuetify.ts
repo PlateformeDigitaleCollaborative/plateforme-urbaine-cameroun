@@ -103,6 +103,7 @@ import {
   mdiClockOutline,
   mdiCheckboxMarkedCircle,
   mdiCheckboxBlankCircleOutline,
+  mdiLoginVariant,
 
 
   mdiAccountOutline,
@@ -197,6 +198,7 @@ export default createVuetify({
       chartBar: mdiChartBar,
       checkboxMarkedCircle: mdiCheckboxMarkedCircle,
       checkboxBlankCircleOutline: mdiCheckboxBlankCircleOutline,
+      loginVariant: mdiLoginVariant,
 
 
       accountOutline: mdiAccountOutline,
