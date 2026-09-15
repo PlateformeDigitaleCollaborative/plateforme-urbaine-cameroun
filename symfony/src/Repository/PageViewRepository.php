@@ -136,4 +136,79 @@ class PageViewRepository extends ServiceEntityRepository
             'views' => (int) $row['views'],
         ], $rows);
     }
+
+    /**
+     * Durée moyenne d'une session de consultation ("temps moyen de connexion").
+     *
+     * Méthode : les pages vues d'un même visiteur (visitorHash) sont découpées en sessions,
+     * une nouvelle session démarrant dès qu'il s'écoule plus de $sessionTimeoutMinutes entre
+     * deux pages (même convention que les outils d'analytics classiques). La durée d'une
+     * session est l'écart entre sa première et sa dernière page vue.
+     *
+     * Les sessions d'une seule page ("rebonds") ont par construction une durée de 0 et sont
+     * exclues du calcul de la moyenne, sans quoi celle-ci serait mécaniquement écrasée. Elles
+     * restent comptées dans totalSessions.
+     *
+     * @return array{averageSeconds: int, totalSessions: int, measurableSessions: int}
+     */
+    public function getSessionStatsSince(\DateTimeInterface $since, int $sessionTimeoutMinutes = 30): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+
+        $sql = <<<'SQL'
+            WITH ordered AS (
+                SELECT visitor_hash,
+                       viewed_at,
+                       LAG(viewed_at) OVER (PARTITION BY visitor_hash ORDER BY viewed_at) AS previous_viewed_at
+                FROM page_view
+                WHERE viewed_at >= :since
+            ),
+            flagged AS (
+                SELECT visitor_hash,
+                       viewed_at,
+                       CASE
+                           WHEN previous_viewed_at IS NULL
+                                OR viewed_at - previous_viewed_at > make_interval(mins => CAST(:timeout AS int))
+                           THEN 1
+                           ELSE 0
+                       END AS is_new_session
+                FROM ordered
+            ),
+            numbered AS (
+                SELECT visitor_hash,
+                       viewed_at,
+                       SUM(is_new_session) OVER (
+                           PARTITION BY visitor_hash ORDER BY viewed_at ROWS UNBOUNDED PRECEDING
+                       ) AS session_number
+                FROM flagged
+            ),
+            sessions AS (
+                SELECT visitor_hash,
+                       session_number,
+                       COUNT(*) AS views,
+                       EXTRACT(EPOCH FROM (MAX(viewed_at) - MIN(viewed_at))) AS duration_seconds
+                FROM numbered
+                GROUP BY visitor_hash, session_number
+            )
+            SELECT COUNT(*) AS total_sessions,
+                   COUNT(*) FILTER (WHERE views > 1) AS measurable_sessions,
+                   COALESCE(AVG(duration_seconds) FILTER (WHERE views > 1), 0) AS average_seconds
+            FROM sessions
+        SQL;
+
+        $row = $connection->executeQuery($sql, [
+            'since' => $since->format('Y-m-d H:i:s'),
+            'timeout' => $sessionTimeoutMinutes,
+        ])->fetchAssociative();
+
+        if (false === $row) {
+            return ['averageSeconds' => 0, 'totalSessions' => 0, 'measurableSessions' => 0];
+        }
+
+        return [
+            'averageSeconds' => (int) round((float) $row['average_seconds']),
+            'totalSessions' => (int) $row['total_sessions'],
+            'measurableSessions' => (int) $row['measurable_sessions'],
+        ];
+    }
 }

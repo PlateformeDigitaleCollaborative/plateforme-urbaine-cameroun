@@ -42,6 +42,22 @@ class ConnectionStats
     #[Groups([self::CONNECTION_READ])]
     private array $dailySeries = [];
 
+    /**
+     * Dernières connexions avec leur provenance (pays + adresse IP).
+     *
+     * @var array<int, array{connectedAt: string, ipAddress: string|null, countryCode: string|null, countryName: string|null, user: string}>
+     */
+    #[Groups([self::CONNECTION_READ])]
+    private array $recentConnections = [];
+
+    /**
+     * Pays qui se connectent le plus à la plateforme, par nombre de connexions.
+     *
+     * @var array<int, array{countryCode: string|null, countryName: string|null, count: int}>
+     */
+    #[Groups([self::CONNECTION_READ])]
+    private array $topCountries = [];
+
     public function getId(): string
     {
         return $this->id;
@@ -79,6 +95,30 @@ class ConnectionStats
     public function setDailySeries(array $dailySeries): self
     {
         $this->dailySeries = $dailySeries;
+
+        return $this;
+    }
+
+    public function getRecentConnections(): array
+    {
+        return $this->recentConnections;
+    }
+
+    public function setRecentConnections(array $recentConnections): self
+    {
+        $this->recentConnections = $recentConnections;
+
+        return $this;
+    }
+
+    public function getTopCountries(): array
+    {
+        return $this->topCountries;
+    }
+
+    public function setTopCountries(array $topCountries): self
+    {
+        $this->topCountries = $topCountries;
 
         return $this;
     }

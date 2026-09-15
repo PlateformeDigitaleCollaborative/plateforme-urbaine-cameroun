@@ -6,6 +6,13 @@ framework:
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
+    # Nécessaire pour que $request->getClientIp() renvoie l'IP réelle du visiteur
+    # lorsqu'un reverse proxy se trouve devant l'application. TRUSTED_PROXIES est
+    # déjà passé au conteneur frankenphp avec une valeur par défaut dans
+    # compose.yaml, donc la variable est toujours définie.
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']
+
     #esi: true
     #fragments: true
 

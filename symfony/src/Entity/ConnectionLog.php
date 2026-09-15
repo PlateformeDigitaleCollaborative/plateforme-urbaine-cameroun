@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Entity(repositoryClass: ConnectionLogRepository::class)]
 #[ORM\Index(columns: ['connected_at'], name: 'idx_connection_log_connected_at')]
+#[ORM\Index(columns: ['country_code'], name: 'idx_connection_log_country_code')]
 class ConnectionLog
 {
     #[ORM\Id]
@@ -30,6 +31,17 @@ class ConnectionLog
 
     #[ORM\Column(length: 45, nullable: true)]
     private ?string $ipAddress = null;
+
+    /**
+     * Code pays ISO 3166-1 alpha-2 (ex: "CM", "FR"), résolu depuis l'IP au moment de la
+     * connexion par IpGeolocationService. Null si l'IP est privée, inconnue ou si le
+     * service de géolocalisation n'a pas répondu.
+     */
+    #[ORM\Column(length: 2, nullable: true)]
+    private ?string $countryCode = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $countryName = null;
 
     public function getId(): ?int
     {
@@ -68,6 +80,30 @@ class ConnectionLog
     public function setIpAddress(?string $ipAddress): static
     {
         $this->ipAddress = $ipAddress;
+
+        return $this;
+    }
+
+    public function getCountryCode(): ?string
+    {
+        return $this->countryCode;
+    }
+
+    public function setCountryCode(?string $countryCode): static
+    {
+        $this->countryCode = $countryCode ? strtoupper($countryCode) : null;
+
+        return $this;
+    }
+
+    public function getCountryName(): ?string
+    {
+        return $this->countryName;
+    }
+
+    public function setCountryName(?string $countryName): static
+    {
+        $this->countryName = $countryName;
 
         return $this;
     }

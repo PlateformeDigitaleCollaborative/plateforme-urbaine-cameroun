@@ -38,6 +38,15 @@ class AudienceStats
     private int $uniqueVisitors = 0;
 
     /**
+     * Durée moyenne d'une session de consultation, en secondes ("temps moyen de connexion").
+     */
+    #[Groups([self::AUDIENCE_READ])]
+    private int $averageSessionSeconds = 0;
+
+    #[Groups([self::AUDIENCE_READ])]
+    private int $totalSessions = 0;
+
+    /**
      * @var array<int, array{date: string, views: int, uniqueVisitors: int}>
      */
     #[Groups([self::AUDIENCE_READ])]
@@ -74,6 +83,30 @@ class AudienceStats
     public function setUniqueVisitors(int $uniqueVisitors): self
     {
         $this->uniqueVisitors = $uniqueVisitors;
+
+        return $this;
+    }
+
+    public function getAverageSessionSeconds(): int
+    {
+        return $this->averageSessionSeconds;
+    }
+
+    public function setAverageSessionSeconds(int $averageSessionSeconds): self
+    {
+        $this->averageSessionSeconds = $averageSessionSeconds;
+
+        return $this;
+    }
+
+    public function getTotalSessions(): int
+    {
+        return $this->totalSessions;
+    }
+
+    public function setTotalSessions(int $totalSessions): self
+    {
+        $this->totalSessions = $totalSessions;
 
         return $this;
     }

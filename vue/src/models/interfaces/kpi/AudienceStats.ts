@@ -12,6 +12,8 @@ export interface AudienceTopPage {
 export interface AudienceStats {
   totalViews: number
   uniqueVisitors: number
+  averageSessionSeconds: number
+  totalSessions: number
   dailySeries: AudienceDailyPoint[]
   topPages: AudienceTopPage[]
 }

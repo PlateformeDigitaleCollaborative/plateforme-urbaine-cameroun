@@ -33,12 +33,20 @@
         "title": "Audience",
         "totalViews": "Pages vues",
         "uniqueVisitors": "Visiteurs uniques",
-        "topPages": "Pages les plus consultées"
+        "topPages": "Pages les plus consultées",
+        "averageSessionDuration": "Temps moyen de connexion"
       },
       "connections": {
         "title": "Connexions",
         "totalConnections": "Connexions",
-        "activeUsers": "Utilisateurs actifs"
+        "activeUsers": "Utilisateurs actifs",
+        "topCountries": "Pays qui se connectent le plus",
+        "origins": "Provenance des dernières connexions",
+        "country": "Pays",
+        "ipAddress": "Adresse IP",
+        "user": "Utilisateur",
+        "date": "Date",
+        "unknownCountry": "Inconnu"
       },
       "contentViews": {
         "title": "Fiches les plus consultées",

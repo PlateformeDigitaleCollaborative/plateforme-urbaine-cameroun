@@ -8,3 +8,7 @@ services:
     exclude:
       - '../../../src/Services/Service/EmailVerifier'
 
+  App\Services\Service\Geolocation\IpGeolocationService:
+    arguments:
+      $ipGeolocationEndpoint: '%env(default:ip_geolocation.default_endpoint:IP_GEOLOCATION_ENDPOINT)%'
+      $ipGeolocationEnabled: '%env(bool:default:ip_geolocation.default_enabled:IP_GEOLOCATION_ENABLED)%'

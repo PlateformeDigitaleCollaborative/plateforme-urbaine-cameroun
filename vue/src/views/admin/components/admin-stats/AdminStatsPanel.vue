@@ -20,20 +20,27 @@
       <div class="AdminStatsPanel__content" v-if="hasData" key="content">
         <section class="AdminStatsPanel__section">
           <SectionBanner :text="$t('admin.stats.audience.title')" />
-          <div class="AdminStatsPanel__grid">
-            <DiverCityStaticKpi
+          <div class="AdminStatsPanel__grid AdminStatsPanel__grid--audience">
+            <!-- <DiverCityStaticKpi
               :label="$t('admin.stats.audience.totalViews')"
               :value="statsStore.audience?.totalViews ?? 0"
               icon="$eyeOutline"
-            />
+            /> -->
             <DiverCityStaticKpi
               :label="$t('admin.stats.audience.uniqueVisitors')"
               :value="statsStore.audience?.uniqueVisitors ?? 0"
               icon="$accountGroup"
             />
+            <DiverCityStaticKpi
+              :label="$t('admin.stats.audience.averageSessionDuration')"
+              :value="averageSessionLabel"
+              icon="$clockOutline"
+            />
           </div>
           <StatsLineChart :series="audienceSeries" />
-          <div class="AdminStatsPanel__subTitle">{{ $t('admin.stats.audience.topPages') }}</div>
+          <div class="AdminStatsPanel__subTitle">
+            {{ $t('admin.stats.audience.topPages') }} ({{ totalViews }})
+          </div>
           <StatsTopList :items="topPagesItems" :empty-label="$t('admin.stats.empty')" />
         </section>
 
@@ -52,6 +59,25 @@
             />
           </div>
           <StatsLineChart :series="connectionsSeries" />
+
+          <div class="AdminStatsPanel__subTitle">
+            {{ $t('admin.stats.connections.topCountries') }}
+          </div>
+          <StatsCountryList
+            :items="statsStore.connections?.topCountries ?? []"
+            :empty-label="$t('admin.stats.empty')"
+            :unknown-label="$t('admin.stats.connections.unknownCountry')"
+          />
+
+          <div class="AdminStatsPanel__subTitle">
+            {{ $t('admin.stats.connections.origins') }}
+          </div>
+          <StatsConnectionsTable
+            :items="statsStore.connections?.recentConnections ?? []"
+            :headers="connectionsTableHeaders"
+            :empty-label="$t('admin.stats.empty')"
+            :unknown-label="$t('admin.stats.connections.unknownCountry')"
+          />
         </section>
 
         <section class="AdminStatsPanel__section">
@@ -90,10 +116,14 @@ import SectionBanner from '@/components/banners/SectionBanner.vue'
 import DiverCityStaticKpi from '@/components/content/DiverCityStaticKpi.vue'
 import StatsLineChart from '@/components/content/StatsLineChart.vue'
 import StatsTopList from '@/components/content/StatsTopList.vue'
+import StatsCountryList from '@/components/content/StatsCountryList.vue'
+import StatsConnectionsTable from '@/components/content/StatsConnectionsTable.vue'
 import { useStatsStore } from '@/stores/statsStore'
 import { computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const statsStore = useStatsStore()
+const { t } = useI18n()
 
 onMounted(() => {
   if (!statsStore.audience && !statsStore.connections && !statsStore.contentViews) {
@@ -104,6 +134,31 @@ onMounted(() => {
 const hasData = computed(
   () => !!statsStore.audience || !!statsStore.connections || !!statsStore.contentViews
 )
+
+const totalViews = computed(() => statsStore.audience?.totalViews ?? 0)
+
+/**
+ * Durée moyenne d'une session, formatée en "Xh Ymin" / "Xmin Ys" / "Xs".
+ */
+const averageSessionLabel = computed(() => {
+  const seconds = statsStore.audience?.averageSessionSeconds ?? 0
+  if (seconds <= 0) return '—'
+
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  const remainingSeconds = Math.round(seconds % 60)
+
+  if (hours > 0) return `${hours} h ${minutes} min`
+  if (minutes > 0) return `${minutes} min ${remainingSeconds} s`
+  return `${remainingSeconds} s`
+})
+
+const connectionsTableHeaders = computed(() => ({
+  country: t('admin.stats.connections.country'),
+  ipAddress: t('admin.stats.connections.ipAddress'),
+  user: t('admin.stats.connections.user'),
+  date: t('admin.stats.connections.date')
+}))
 
 const audienceSeries = computed(
   () =>
@@ -165,6 +220,10 @@ const topProjectsItems = computed(
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
+
+    &--audience {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   &__contentGrid {
@@ -197,6 +256,7 @@ const topProjectsItems = computed(
 @media (max-width: $bp-md) {
   .AdminStatsPanel {
     &__grid,
+    &__grid--audience,
     &__contentGrid {
       grid-template-columns: 1fr;
     }

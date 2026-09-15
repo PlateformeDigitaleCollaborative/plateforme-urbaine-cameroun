@@ -27,6 +27,10 @@ class AudienceStatsProvider implements ProviderInterface
         $stats->setDailySeries($this->pageViewRepository->countViewsGroupedByDay($since));
         $stats->setTopPages($this->pageViewRepository->getTopPathsSince($since, null, 10));
 
+        $sessionStats = $this->pageViewRepository->getSessionStatsSince($since);
+        $stats->setAverageSessionSeconds($sessionStats['averageSeconds']);
+        $stats->setTotalSessions($sessionStats['totalSessions']);
+
         return $stats;
     }
 }

@@ -26,6 +26,12 @@ class ConnectionStatsProvider implements ProviderInterface
         $stats->setActiveUsers($this->connectionLogRepository->countDistinctUsersSince($since));
         $stats->setDailySeries($this->connectionLogRepository->countConnectionsGroupedByDay($since));
 
+        $limit = (int) ($this->requestStack->getCurrentRequest()?->query->get('limit') ?? 10);
+        $limit = max(1, min(50, $limit));
+
+        $stats->setRecentConnections($this->connectionLogRepository->getRecentConnections($since, 20));
+        $stats->setTopCountries($this->connectionLogRepository->countConnectionsGroupedByCountry($since, $limit));
+
         return $stats;
     }
 }

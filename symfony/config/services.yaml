@@ -9,6 +9,10 @@ parameters:
     domain: '%env(DOMAIN)%'
     domain.url: 'https://%env(DOMAIN)%'
     email_verifier.lifetime: 172800 # 2 days
+    # Géolocalisation des IP de connexion (KPIs de provenance) : surchargeable via
+    # les variables d'environnement IP_GEOLOCATION_ENDPOINT / IP_GEOLOCATION_ENABLED.
+    ip_geolocation.default_endpoint: 'https://ipwho.is/{ip}'
+    ip_geolocation.default_enabled: true
 
 services:
     # default configuration for services in *this* file
