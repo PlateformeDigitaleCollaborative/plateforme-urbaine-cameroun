@@ -34,13 +34,14 @@ class TestMailerCommand extends Command
             ->from('kz.geosm@gmail.com')
             ->to($to)
             ->subject('Test SMTP PDC')
-            ->text('Ceci est un email de test envoyé depuis PDC via ' . ($_ENV['MAILER_DSN'] ?? 'DSN inconnu'));
+            ->text('Ceci est un email de test envoyé depuis PDC via '.($_ENV['MAILER_DSN'] ?? 'DSN inconnu'));
 
         try {
             $this->mailer->send($email);
             $io->success("Email envoyé à $to");
         } catch (\Throwable $e) {
-            $io->error('Échec de l\'envoi : ' . $e->getMessage());
+            $io->error('Échec de l\'envoi : '.$e->getMessage());
+
             return Command::FAILURE;
         }
 

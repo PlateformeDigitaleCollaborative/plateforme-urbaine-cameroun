@@ -5,8 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Post;
 use App\Repository\PageViewRepository;
-use App\Services\State\Processor\PageView\PageViewLogProcessor;
 use App\Services\State\Processor\PageView\PageViewLogDto;
+use App\Services\State\Processor\PageView\PageViewLogProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
