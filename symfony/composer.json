@@ -29,6 +29,7 @@
         "sentry/sentry-symfony": "^5.0",
         "stof/doctrine-extensions-bundle": "^1.7",
         "symfony/asset": "7.1.*",
+        "symfony/brevo-mailer": "7.1.*",
         "symfony/console": "7.1.*",
         "symfony/css-selector": "7.1.*",
         "symfony/dom-crawler": "7.1.*",
