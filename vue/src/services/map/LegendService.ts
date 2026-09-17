@@ -10,20 +10,12 @@ export class LegendService {
   static watchAppLayersVisibilityChanges(
     actorLayer: Ref<Layer | null>,
     projectLayer: Ref<Layer | null>,
-    resourceLayer: Ref<Layer | null>,
     legendList: Ref<(AppLayerLegendItem | AtlasLayerLegendItem)[]>,
     atlasMaps: Ref<AtlasMap[]>
   ) {
     watch(
-      [
-        () => actorLayer.value?.isShown,
-        () => projectLayer.value?.isShown,
-        () => resourceLayer.value?.isShown
-      ],
-      (
-        [actorIsShown, projectIsShown, resourceIsShown],
-        [prevActorIsShown, prevProjectIsShown, prevResourceIsShown]
-      ) => {
+      [() => actorLayer.value?.isShown, () => projectLayer.value?.isShown],
+      ([actorIsShown, projectIsShown], [prevActorIsShown, prevProjectIsShown]) => {
         if (actorIsShown !== prevActorIsShown) {
           this.updateLegendList(
             ItemType.ACTOR,
@@ -40,15 +32,6 @@ export class LegendService {
             legendList,
             atlasMaps,
             projectIsShown
-          )
-        }
-        if (resourceIsShown !== prevResourceIsShown) {
-          this.updateLegendList(
-            ItemType.RESOURCE,
-            LayerType.APP_LAYER,
-            legendList,
-            atlasMaps,
-            resourceIsShown
           )
         }
       },

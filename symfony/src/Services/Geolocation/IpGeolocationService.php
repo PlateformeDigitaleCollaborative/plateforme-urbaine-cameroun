@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Service\Geolocation;
+namespace App\Services\Geolocation;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Cache\CacheInterface;

@@ -18,7 +18,6 @@ import { AtlasMapService } from '@/services/map/AtlasMapService'
 import { LegendService } from '@/services/map/LegendService'
 import { MapStoreSerializationService } from '@/services/map/MapStoreSerializationService'
 import { ProjectService } from '@/services/projects/ProjectService'
-import { ResourceService } from '@/services/resources/ResourceService'
 import type { LngLat, LngLatBounds } from 'maplibre-gl'
 import { defineStore } from 'pinia'
 import { computed, reactive, ref, watch, type Ref } from 'vue'
@@ -26,7 +25,6 @@ import { useActorsStore } from './actorsStore'
 import { useApplicationStore } from './applicationStore'
 import { useAtlasStore } from './atlasStore'
 import { useProjectStore } from './projectStore'
-import { useResourceStore } from './resourceStore'
 
 export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   const applicationStore = useApplicationStore()
@@ -43,8 +41,6 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
 
   const actorLayer: Ref<Layer | null> = ref(null)
   const actorSubLayers: Ref<Layer[]> = ref([])
-  const resourceLayer: Ref<Layer | null> = ref(null)
-  const resourceSubLayers: Ref<Layer[]> = ref([])
   const projectLayer: Ref<Layer | null> = ref(null)
   const projectSubLayers: Ref<Layer[]> = ref([])
 
@@ -102,13 +98,7 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
   }
 
   // Activate a watcher for app layers status
-  LegendService.watchAppLayersVisibilityChanges(
-    actorLayer,
-    projectLayer,
-    resourceLayer,
-    legendList,
-    atlasMaps
-  )
+  LegendService.watchAppLayersVisibilityChanges(actorLayer, projectLayer, legendList, atlasMaps)
 
   function getSerializedMapState(): string {
     return MapStoreSerializationService.serializeStore(useMyMapStore())
@@ -185,11 +175,10 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
     async () => {
       const projectStore = useProjectStore()
       const actorStore = useActorsStore()
-      const resourceStore = useResourceStore()
       activeItem.value = null
       activeItemType.value = null
 
-      await Promise.all([resourceStore.getAll(), actorStore.getAll(), projectStore.getAll()])
+      await Promise.all([actorStore.getAll(), projectStore.getAll()])
       if (activeItemId.value) {
         let item: Item | undefined = projectStore.projects.find(
           (project) => project.id === activeItemId.value
@@ -203,12 +192,6 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
           if (item) {
             activeItemType.value = ItemType.ACTOR
             activeItem.value = await ActorsService.getActor(item.id)
-          } else {
-            item = resourceStore.resources.find((resource) => resource.id === activeItemId.value)
-            if (item) {
-              activeItemType.value = ItemType.RESOURCE
-              activeItem.value = await ResourceService.get(item)
-            }
           }
         }
       }
@@ -230,8 +213,6 @@ export const useMyMapStore = defineStore(StoresList.MY_MAP, () => {
     actorSubLayers,
     projectLayer,
     projectSubLayers,
-    resourceLayer,
-    resourceSubLayers,
     atlasMaps,
     atlasSearchText,
     activeAtlas,

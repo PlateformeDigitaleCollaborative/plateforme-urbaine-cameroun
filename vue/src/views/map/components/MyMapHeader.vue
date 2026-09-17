@@ -97,9 +97,11 @@ function getSharedMapLink() {
     min-width: $dim-logo;
     max-width: $dim-logo;
     padding: 0.125rem;
-    border-radius: $dim-radius;
+    border-radius: 50%;
     border: solid 1px rgb(var(--v-theme-main-grey));
+    object-fit: cover;
   }
+  
   .MyMapHeader__search {
     flex: 1 1 auto;
 

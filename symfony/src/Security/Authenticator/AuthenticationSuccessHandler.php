@@ -5,7 +5,7 @@ namespace App\Security\Authenticator;
 use App\Entity\User\User;
 use App\Repository\ConnectionLogRepository;
 use App\Security\Authenticator\Exception\InvalidUserException;
-use App\Services\Service\Geolocation\IpGeolocationService;
+use App\Services\Geolocation\IpGeolocationService;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler as LexikAuthenticationSuccessHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

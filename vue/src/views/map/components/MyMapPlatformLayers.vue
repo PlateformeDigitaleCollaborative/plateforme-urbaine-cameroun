@@ -10,11 +10,11 @@
       v-model:sub-layers="myMapStore.actorSubLayers"
       @update="refreshLayer(ItemType.ACTOR)"
     />
-    <MyMapLayerPicker
+    <!-- <MyMapLayerPicker
       v-model:main-layer="myMapStore.resourceLayer"
       v-model:sub-layers="myMapStore.resourceSubLayers"
       @update="refreshLayer(ItemType.RESOURCE)"
-    />
+    /> -->
   </div>
 </template>
 

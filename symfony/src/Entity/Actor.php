@@ -198,7 +198,8 @@ class Actor
     // Override Traits groups
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[Groups([Actor::ACTOR_WRITE, Actor::ACTOR_READ_ITEM, Actor::ACTOR_READ_COLLECTION])]
+    // #[Groups([Actor::ACTOR_WRITE, Actor::ACTOR_READ_ITEM, Actor::ACTOR_READ_COLLECTION])]
+    #[Groups([Actor::ACTOR_WRITE, Actor::ACTOR_READ_ITEM, Actor::ACTOR_READ_COLLECTION, Actor::ACTOR_READ_COLLECTION_ALL])]
     private ?GeoData $geoData = null;
 
     #[ORM\Column]
