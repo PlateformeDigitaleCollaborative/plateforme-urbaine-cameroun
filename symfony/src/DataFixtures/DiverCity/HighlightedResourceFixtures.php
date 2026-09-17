@@ -61,7 +61,7 @@ class HighlightedResourceFixtures extends Fixture implements DependentFixtureInt
      * Ressources rattachées aux réservations, dédoublonnées, dans l'ordre de
      * rattachement.
      *
-     * @return Resource[]
+     * @return resource[]
      */
     private function collectBookedResources(ObjectManager $manager): array
     {
