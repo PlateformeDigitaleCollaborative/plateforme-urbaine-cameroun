@@ -1,4 +1,3 @@
-
 ##
 ## --------------------------------------------------------------------------------
 ##  🎵  Symfony commands
@@ -56,8 +55,13 @@ create-database:	## Create the database
 run-migration:		## Run migrations
 	@$(SYMFONY) do:mi:mi -n --allow-no-migration
 
-run-fixtures:		## Run fixtures
+run-fixtures: run-alice-fixtures run-divercity-fixtures	## Run all fixtures (Alice YAML + Doctrine/DiverCity)
+
+run-alice-fixtures:	## Run only the Alice (YAML) fixtures - WARNING: purges the whole database
 	@$(SYMFONY) ha:fi:lo -n -vvv
+
+run-divercity-fixtures:	## Run only the Doctrine fixtures (DiverCity), without purging
+	@$(SYMFONY) do:fi:lo -n --append
 
 make-migration:		## Create a new migration
 	@$(SYMFONY) make:migration
