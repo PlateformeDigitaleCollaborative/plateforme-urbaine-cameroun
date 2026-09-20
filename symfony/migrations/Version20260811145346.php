@@ -22,24 +22,16 @@ final class Version20260811145346 extends AbstractMigration
             CREATE TABLE divercity.booking_attachment (
                 id                      SERIAL PRIMARY KEY,
                 booking_id              uuid NOT NULL REFERENCES divercity.booking(id) ON DELETE CASCADE,
-                media_object_id         INTEGER NOT NULL REFERENCES public.media_object(id) ON DELETE CASCADE,
+                file_object_id          INTEGER NOT NULL REFERENCES public.media_object(id) ON DELETE CASCADE,
                 type                    VARCHAR(30) NOT NULL,
-                resource_document_type  VARCHAR(30),
                 created_at              TIMESTAMP(0) NOT NULL DEFAULT now(),
                 CONSTRAINT chk_booking_attachment_type
-                    CHECK (type IN ('AGENDA', 'RESOURCE_DOCUMENT', 'OTHER')),
-                CONSTRAINT chk_booking_attachment_resource_document_type
-                    CHECK (resource_document_type IS NULL OR resource_document_type IN ('TDR', 'REPORT', 'OTHER')),
-                CONSTRAINT chk_booking_attachment_resource_type_consistency
-                    CHECK (
-                        (type = 'RESOURCE_DOCUMENT' AND resource_document_type IS NOT NULL)
-                        OR (type != 'RESOURCE_DOCUMENT' AND resource_document_type IS NULL)
-                    )
+                    CHECK (type IN ('AGENDA', 'RESOURCE_DOCUMENT', 'OTHER'))
             )
         SQL);
 
         $this->addSql('CREATE INDEX idx_booking_attachment_booking ON divercity.booking_attachment(booking_id)');
-        $this->addSql('CREATE INDEX idx_booking_attachment_media_object ON divercity.booking_attachment(media_object_id)');
+        $this->addSql('CREATE INDEX idx_booking_attachment_media_object ON divercity.booking_attachment(file_object_id)');
         $this->addSql('CREATE INDEX idx_booking_attachment_type ON divercity.booking_attachment(booking_id, type)');
     }
 

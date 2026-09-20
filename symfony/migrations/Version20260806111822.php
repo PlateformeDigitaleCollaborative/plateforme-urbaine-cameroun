@@ -19,6 +19,9 @@ final class Version20260806111822 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
+        $legacyIndex = $this->connection->fetchOne("SELECT to_regclass('divercity.idx_blocked_period_date')");
+        $this->skipIf(null === $legacyIndex || false === $legacyIndex, 'Schéma divercity déjà à jour (créé par Version20260805000000).');
+        
         $this->addSql(<<<'SQL'
             DROP INDEX divercity.idx_blocked_period_date
         SQL);
